@@ -98,7 +98,7 @@ public class PoolingDataSourceExample {
         // do it manually.
         //
         System.out.println("Setting up data source.");
-        DataSource dataSource = setupDataSource(args[0], "root", "");
+        DataSource dataSource = setupDataSource(args[0]);
         System.out.println("Done.");
 
         //
@@ -132,7 +132,8 @@ public class PoolingDataSourceExample {
         }
     }
 
-    public static DataSource setupDataSource(String connectURI, String username, String password) {
+    //public static DataSource setupDataSource(String connectURI, String username, String password) {
+    public static DataSource setupDataSource(String connectURI) {
         //
         // First, we'll create a ConnectionFactory that the
         // pool will use to create Connections.
@@ -141,19 +142,8 @@ public class PoolingDataSourceExample {
         // arguments.
         //
 
-        //Jim Hatcher: I'm adding this properties object here and passing in the user/pass explicitly here
-        //  because it doesn't seem to be getting parsed out of the JDBC URI using this kind of syntax:
-        //     jdbc:postgresql://user:pass@localhost:26257/defaultdb
-        // I think you could also pass it as ?user=joe&pass=joepass
-        //  if you really want it to be in the URI
-        // For CRDB, we recommend using certs for authentication, so you wouldn't need to pass the password
-        //  but you do need to pass the user (which needs to match the user on the client cert)
-        Properties props = new Properties();
-        props.put("user", username);
-        props.put("pass", password);
-
         ConnectionFactory connectionFactory =
-                new DriverManagerConnectionFactory(connectURI, props);
+                new DriverManagerConnectionFactory(connectURI, null);
 
         //
         // Next we'll create the PoolableConnectionFactory, which wraps
